@@ -25,7 +25,7 @@ app.use(cookieParser());
 app.use(
   cors({
     credentials: true,
-    origin: "https://airbnb-clone-shivam-tanwar.onrender.com/"
+    origin: "http://localhost:5173"
   })
 );
 
