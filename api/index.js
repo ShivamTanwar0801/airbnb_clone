@@ -15,6 +15,8 @@ const fs = require("fs");
 
 const port = process.env.PORT || 4000;
 
+mongoose.connect(process.env.MONGO_URI);
+
 const bcryptSalt = bcrypt.genSaltSync();
 const jwtSecret = "daadacfawaafadcadafqfadcafafsada";
 
@@ -28,8 +30,6 @@ app.use(
     origin: "https://airbnb-clone-shivam-tanwar.onrender.com"
   })
 );
-
-mongoose.connect(process.env.MONGO_URI);
 
 app.get("/test", (req, res) => {
   res.json("test ok");
@@ -243,5 +243,14 @@ app.get("/api/v1/bookings", async (req, res) => {
   const userData = await getUserDataFromReq(req);
   res.json(await Booking.find({ user: userData.id }).populate("place"));
 });
+
+if (process.env.NODE_ENV === "production") {
+  const __dirname = path.resolve();
+  app.use(express.static(path.join(__dirname, "/client/dist")));
+
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "client", "dist", "index.html"));
+  });
+}
 
 app.listen(port);
