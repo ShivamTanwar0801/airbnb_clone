@@ -13,7 +13,7 @@ import PlacePage from "./pages/PlacePage";
 import BookingsPage from "./pages/BookingsPage";
 import BookingPage from "./pages/BookingPage";
 
-axios.defaults.baseURL = "http://localhost:4000/api/v1";
+axios.defaults.baseURL = "https://airbnb-clone-shivam-tanwar.onrender.com/api/v1";
 axios.defaults.withCredentials = true;
 
 function App() {
