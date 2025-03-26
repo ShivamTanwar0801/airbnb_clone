@@ -30,7 +30,7 @@ export default function BookingsPage() {
             <Link
               to={`/account/bookings/${booking._id}`}
               key={booking._id}
-              className="flex gap-4 bg-gray-200 rounded-2xl overflow-hidden"
+              className="flex gap-4 bg-gray-200 rounded-2xl overflow-hidden mb-4"
             >
               <div className="w-48 sm:w-[220px]">
                 <PlaceImg place={booking.place} />
@@ -62,7 +62,7 @@ export default function BookingsPage() {
                       />
                     </svg>
                     <span className="text-[14px] sm:text-3xl">
-                      Total price: ${booking.price}
+                      Total price: ₹{booking.price}
                     </span>
                   </div>
                 </div>
