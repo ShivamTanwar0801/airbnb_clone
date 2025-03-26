@@ -36,7 +36,7 @@ export default function BookingPage() {
         </div>
         <div className="bg-primary w-full mt-4 sm:mt-0 sm:w-auto sm:p-6 text-white rounded-2xl text-center">
           <div>Total price</div>
-          <div className="sm:text-3xl">${booking.price}</div>
+          <div className="sm:text-3xl">₹{booking.price}</div>
         </div>
       </div>
       <PlaceGallery place={booking.place} />
