@@ -29,6 +29,10 @@ export default function PhotosUploader({ addedPhotos, onChange }) {
         onChange((prev) => {
           return [...prev, ...filenames];
         });
+      })
+      .catch((err) => {
+        console.error("Upload failed:", err.response?.data || err.message);
+        alert("Upload failed. Check console for details.");
       });
   }
   function removePhoto(ev, filename) {
