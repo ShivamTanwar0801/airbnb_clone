@@ -9,10 +9,11 @@ const Place = require("./models/Place");
 const Booking = require("./models/Booking");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
-const imageDownloader = require("image-downloader");
 const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
+const cloudinary = require("cloudinary").v2;
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
 const port = process.env.PORT || 4000;
 
@@ -20,6 +21,12 @@ mongoose.connect(process.env.MONGO_URI);
 
 const bcryptSalt = bcrypt.genSaltSync();
 const jwtSecret = "daadacfawaafadcadafqfadcafafsada";
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 app.use(express.json());
 app.use("/uploads", express.static(__dirname + "/uploads"));
@@ -88,30 +95,37 @@ app.post("/api/v1/logout", (req, res) => {
 
 app.post("/api/v1/upload-by-link", async (req, res) => {
   const { link } = req.body;
-  const newName = "photo" + Date.now() + ".jpg";
-  await imageDownloader.image({
-    url: link,
-    dest: __dirname + "/uploads/" + newName
-  });
 
-  res.json(newName);
+  try {
+    const result = await cloudinary.uploader.upload(link, {
+      folder: "airbnb-clone",
+    });
+
+    res.json(result.secure_url); // send back Cloudinary image URL
+  } catch (err) {
+    console.error("Cloudinary Upload Error:", err);
+    res.status(500).json({ error: "Image upload failed" });
+  }
 });
 
-const photosMiddleware = multer({ dest: "uploads/" });
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "airbnb-clone", // Cloudinary folder name
+    allowed_formats: ["jpg", "jpeg", "png"],
+  },
+});
+
+const photosMiddleware = multer({ storage });
 
 app.post("/api/v1/upload", photosMiddleware.array("photos", 100), (req, res) => {
-  const uploadedFiles = [];
-  for (let i = 0; i < req.files.length; i++) {
-    const { path, originalname } = req.files[i];
-    const parts = originalname.split(".");
-    const extension = parts[parts.length - 1];
-    const newPath = path + "." + extension;
-    fs.renameSync(path, newPath);
-    uploadedFiles.push(newPath.replace("uploads\\", ""));
-    console.log(uploadedFiles);
+  if (!req.files || req.files.length === 0) {
+    return res.status(400).json({ error: "No files uploaded" });
   }
+  console.log(req.files);
+  const uploadedUrls = req.files.map((file) => file.path);
 
-  res.json(uploadedFiles);
+  res.json(uploadedUrls);
 });
 
 app.post("/api/v1/places", (req, res) => {
