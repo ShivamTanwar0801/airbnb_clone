@@ -32,7 +32,7 @@ export default function BookingsPage() {
               key={booking._id}
               className="flex gap-4 bg-gray-200 rounded-2xl overflow-hidden mb-4"
             >
-              <div className="w-48 sm:w-[220px]">
+              <div className="w-48 sm:w-[220px] h-[250px]">
                 <PlaceImg place={booking.place} />
               </div>
               <div className="xs:py-3 pr-3 grow flex flex-col justify-between items-center">
