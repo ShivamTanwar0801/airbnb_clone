@@ -101,7 +101,7 @@ export default function BookingWidget({ place }) {
           </div>
         )}
       </div>
-      <button onClick={bookThisPlace} className="primary mt-4 disabled:bg-red-400 active:bg-rose-700" disabled={phone ? false : true}>
+      <button onClick={bookThisPlace} className="primary mt-4 disabled:bg-red-400 active:bg-rose-700 hover:shadow-xl hover:translate-y-0.5 disabled:translate-y-0 disabled:shadow-none" disabled={phone ? false : true}>
         Book this place:
         {numberOfNights > 0 ? (
           <span> ₹{bookingPrice}</span>
